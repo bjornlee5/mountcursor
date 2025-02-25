@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { storage } from '../firebase/config';
 import { ref, listAll, getDownloadURL, getMetadata } from 'firebase/storage';
 import ProtectedRoute from '../components/ProtectedRoute';
+import Image from 'next/image';
 
 interface ImageMetadata {
   prompt: string;
@@ -26,7 +27,7 @@ export default function MyImages() {
   const [isLoading, setIsLoading] = useState(false);
   const { user } = useAuth();
 
-  const fetchImages = async () => {
+  const fetchImages = useCallback(async () => {
     if (!user) return;
     setError(null);
     setIsLoading(true);
@@ -123,12 +124,12 @@ export default function MyImages() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [user]);
 
   // Fetch images on mount and when user changes
   useEffect(() => {
     fetchImages();
-  }, [user]);
+  }, [fetchImages]);
 
   return (
     <ProtectedRoute>
@@ -161,10 +162,13 @@ export default function MyImages() {
                 <div className="flex flex-col md:flex-row">
                   <div className="md:w-1/2 relative">
                     <div className="relative w-full">
-                      <img
+                      <Image
                         src={image.url}
                         alt={`Generated image ${index + 1}`}
+                        width={512}
+                        height={512}
                         className="w-full h-auto"
+                        priority={index === 0}
                       />
                     </div>
                   </div>
