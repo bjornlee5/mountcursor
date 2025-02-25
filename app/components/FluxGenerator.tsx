@@ -266,7 +266,7 @@ export default function FluxGenerator() {
                   </svg>
                 </button>
               </div>
-              <p className="text-center text-sm text-gray-600 italic">"{prompt}"</p>
+              <p className="text-center text-sm text-gray-600 italic">&ldquo;{prompt}&rdquo;</p>
             </div>
           )}
 
